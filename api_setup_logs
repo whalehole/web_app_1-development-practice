@@ -1,0 +1,4 @@
+installing aws framework for aws cognito
+https://docs.amplify.aws/lib/auth/getting-started/q/platform/js#authentication-with-amplify
+$ amplify add auth
+
