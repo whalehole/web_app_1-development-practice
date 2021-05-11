@@ -1,5 +1,6 @@
 // INITIALIZATION & ACTIVATION
 require("dotenv").config();
+const axios = require('axios')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
@@ -14,10 +15,10 @@ const oauthDB = require('./db/pgWrapper_oauth2')
 const jwt = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem')
     // ACCESS TOKEN JWK
-const jwk_1 = {"alg":"RS256","e":"AQAB","kid":"lgFuNxgkRYI5vYmt/dq3Z5DUJU7BatetEdIG4Vs2z8k=","kty":"RSA","n":"sXtOczy4zB8CD3t77uWnkO70_0neS_j6HvUorfkinV5TC1VNoB6Jnm8qaO7i2ey1SHueKLSJeZ2sAQIwPdHj4AyXyL7jO-JB2lzliBRqs3Sr3TDgMie8fQjsHhDuf1_4h_wohzgbxC2iSjiZky2phez5ByD0nX9HIdFNJmbbS52it8g-myFQwn1DFN_mtzB33181fEedZcbPCtVoaBC-UVK8OButELqvJRN9ch9dDkuKPnWOXizYUin_Db8rMY85N37JN1J_PBrSH1s7B6H2JjZF7Cr4hPrM71kabSu8r10rfk-I1J0JCtDc0_dLOfx6HS8fp9ebBhzaxHE6YH14YQ","use":"sig"}
+const jwk_1 = {"alg":process.env.JWK_1_ALG,"e":process.env.JWK_1_E,"kid":process.env.JWK_1_KID,"kty":process.env.JWK_1_KTY,"n":process.env.JWK_1_N,"use":process.env.JWK_1_USE}
 const pem_1 = jwkToPem(jwk_1)
     // ID TOKEN JWK
-const jwk_2 = {"alg":"RS256","e":"AQAB","kid":"j7nSGgyvtfs+l23zzjZFaaAm9lMWsAJ3HJBmOOGGVy8=","kty":"RSA","n":"3VPjrKwN70koJwAy-q9dupUvTyhnSgcUdY-jXLzY2nyiF1PK3rcA0mhHkPZr0t8f9fo7EiuBRIVCwa3eHVEmwspvi3VmKK-z9zT-svLI-go19SW8XPjCDXP5jwKMkwEIwVbbXS6AR837uzOv2u6OY8Ni-WYAyVmkrzCBjcINZLtStiaB5Dk7zX0eMHlRNdat0dCxMD4jUG97yNW_KubKsVCAQujHLIL3-f-d0UqCzoBgERTCCnqAajIvrA0dd-GHD071DDm0VnkhozRNlDiPbUVjyIK1kNxeM24HOuv5PFqH7dvY8y4UAJPjHvOAAO0PYzwI_Z75df35P95YIvh5AQ","use":"sig"}
+const jwk_2 = {"alg":process.env.JWK_2_ALG,"e":process.env.JWK_2_E,"kid":process.env.JWK_2_KID,"kty":process.env.JWK_2_KTY,"n":process.env.JWK_2_N,"use":process.env.JWK_2_USE}
 const pem_2 = jwkToPem(jwk_2)
 // ---------
 
@@ -68,11 +69,36 @@ app.get('/oauth/auth', cors(corsOptions), (req,res)=>{
                 // EXTRACT USER DETAILS FROM DATABASE
                 // SEND AUTHENTICATION STATUS & USER DETAILS
                 res.send({isAuthenticated: true})
-            }
+            } 
             if (err) {
                 console.log(`/oauth/auth | failed token validation`)
                 res.send({isAuthenticated: false})
             }
+        })
+    }
+    else if (req.cookies['guguRefreshToken']) {
+        // SEND REFRESH TOKEN TO IDP TO GET NEW SETS OF TOKENS FOR CONTINUED ACCESS
+        axios.post(process.env.AWS_TOKEN_ENDPOINT_REFRESH, null, {
+            params: {
+                "grant_type": "refresh_token",
+                "client_id": process.env.JWT_APP_CLIENT_ID,
+                "refresh_token": req.cookies['guguRefreshToken']
+            }
+        }, {
+            headers: {
+                "Content-Type": 'application/x-www-form-urlencoded'
+            }
+        })
+        .then((resp)=>{
+            console.log(`/oauth/auth | success refresh token |`, resp.data)
+            res.cookie('guguAccessToken', resp.data.access_token, { httpOnly: true, secure: false, maxAge: 24*60*60000 })
+            // EXTRACT USER DETAILS FROM DATABASE
+            // SEND AUTHENTICATION STATUS & USER DETAILS
+            res.send({isAuthenticated: true})
+        })
+        .catch((err)=>{
+            console.log(`/oauth/auth | failed refresh token |`, err)
+            res.send({isAuthenticated: false})
         })
     }
     else {

@@ -6,6 +6,7 @@ import GuestControlPanel from '../components/guest_control_panel'
 import UserControlPanel from '../components/user_control_panel'
 
 export default function Header(props) {
+
     console.log('component | header.js | signed in =>', props.signedIn)
     return (
         <>

@@ -12,12 +12,10 @@ import Router from 'next/router';
 // REACT
 import { useRef, useState, useEffect } from 'react';
 // SCRIPTS
-import { checkCookie, getCookie } from '../src/cookie';
 import { signedIn } from '../src/signin_status';
 
 export default function RegisterModal(props) {
     // STATES
-
 
     // INPUT VALUES
     const email = useRef()
@@ -27,6 +25,7 @@ export default function RegisterModal(props) {
     const username = useRef()
     const birthdate = useRef()
     const gender = useRef()
+    const modal = useRef()
 
     // FUNCTIONS
     async function register() {
@@ -54,16 +53,20 @@ export default function RegisterModal(props) {
         // VALIDATION
         register()
     }
-
+    // const handleClickOutside = event => {
+    //     if (modal.current && !modal.current.contains(event.target) && event.target != document.getElementById("registerButton")) {
+    //         props.setMode('')
+    //     }
+    // }
     // EFFECTS ON CHANGE
     useEffect(()=>{
-
+        // document.addEventListener('mousedown', handleClickOutside)
     }, [])
 
     if (props.mode !== 'show') {return null}
     return (
         <>
-            <div className="registermodal-grid-container">
+            <div ref={modal} className="registermodal-grid-container">
                 <style jsx>{`
                 input:focus, select:focus {
                     outline-style: none;
@@ -71,7 +74,7 @@ export default function RegisterModal(props) {
                 }
                 .registermodal-grid-container {
                     border-radius:10px;
-                    border: 1px solid rgba(0, 0, 0, 0.3);
+                    border: 0px solid rgba(0, 0, 0, 0.3);
                     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
                     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
                     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
@@ -153,7 +156,19 @@ export default function RegisterModal(props) {
                     width: 100%;
                     height: 1px;
                 }
+                .overlay {
+                    z-index: -1;
+                    background-color: white;
+                    opacity: 0.7;
+                    position: fixed;
+                    height: 100vh;
+                    width: 100vw;
+                    top: 0px;
+                    left: 0px;
+                }
                 `}</style>
+                {/* OVERLAY */}
+                <div className="overlay"></div>
                 {/* MODAL HEADER */}
                 <div className="registermodal-grid-item1">
                     <p>Sign up</p>

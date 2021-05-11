@@ -1,11 +1,30 @@
+import Link from 'next/link';
+import { useRef, useState, useEffect } from 'react';
 // COMPONENTS
 import CreateAccountButton from '../components/buttons/create_account_button'
 import SignInButton from '../components/buttons/signin_button'
+import RegisterModal from './register_modal';
+import SigninModal from './signin_modal';
 
 export default function GuestControlPanel() {
+    // STATES
+    const [regModal, setRegModal] = useState('noShow')
+    const [signinModal, setSigninModal] = useState('noShow')
+    // NODES
+
+    // HANDLERS
+    const handleShowRegModal = mode => {
+        setRegModal(mode)
+    }
+    const handleShowSigninModal = mode => {
+        setSigninModal(mode)
+    }
+
     return (
         <>
             <div className="guestcontrolpanel-grid-container">
+                <RegisterModal setMode={handleShowRegModal} mode={regModal} />
+                <SigninModal setMode={handleShowSigninModal} mode={signinModal} />
                 {/* STYLES */}
                 <style jsx>{`
                     // MOBILE
@@ -27,10 +46,14 @@ export default function GuestControlPanel() {
                     }
                 `}</style>
                 <div className="guestcontrolpanel-grid-item1">
-                    <CreateAccountButton />
+                    <Link href="">
+                        <a id="registerButton" onClick={()=>{handleShowRegModal('show')}}>Create account</a>
+                    </Link>
                 </div>
                 <div className="guestcontrolpanel-grid-item2">
-                    <SignInButton />
+                    <Link href="">
+                        <a id="signinButton" onClick={()=>{handleShowSigninModal('show')}}>Sign in</a>
+                    </Link>
                 </div>
             </div>
         </>

@@ -16,7 +16,7 @@ import { signedIn } from '../src/signin_status';
 // COMPONENTS
 import RegisterModal from '../components/register_modal';
 
-// SIGN IN PAGE
+// SIGN IN MODAL
 export default function SignInPage() {
     const router = useRouter()
     // PROMISES
@@ -125,6 +125,10 @@ export default function SignInPage() {
                 hr {
                     width: 150px;
                 }
+                .alt-links {
+                    font-size: 11px;
+                    text-decoration: underline;
+                }
                 `}</style>
                 {/* LOGO */}
                 <div className="signinpage-grid-item1">
@@ -191,9 +195,14 @@ export default function SignInPage() {
                 {/* WARNING */}
                 <div className="signinpage-grid-item5">
                     <hr></hr>
-                    <p></p>
+                    <Link href="/forgetpw">
+                        <a className="alt-links">Forgotten password</a>
+                    </Link>
+                    <br></br>
+                    <Link href="">
+                        <a className="alt-links" onClick={()=>{handleShowModal('show')}}>Create account</a>
+                    </Link>
                 </div>
-                <button type="button" onClick={()=>{handleShowModal('show')}}>show modal</button>
             </div>
         </>
     )
