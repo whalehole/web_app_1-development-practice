@@ -25,6 +25,9 @@ export default function RegisterModal(props) {
     const username = useRef()
     const birthdate = useRef()
     const gender = useRef()
+    const countryFullName = useRef()
+
+    // NODES
     const modal = useRef()
 
     // FUNCTIONS
@@ -38,13 +41,31 @@ export default function RegisterModal(props) {
                     'custom:birthdate': birthdate.current.value,
                     'custom:first_name': firstName.current.value,
                     'custom:surname': surname.current.value,
-                    'custom:gender': gender.current.value
+                    'custom:gender': gender.current.value,
+                    'custom:countryfullname': countryFullName.current.value
                 } 
             });
-            console.log(user)
-            Router.push('/verification')
+            console.log('register_modal.js | registered user into IDP | response | ', user)
+            axios.post(`http://localhost:8000/oauth/register`, {
+                userEmail: email.current.value,
+                birthdate: birthdate.current.value,
+                firstName: firstName.current.value,
+                surname: surname.current.value,
+                username: username.current.value,
+                gender: gender.current.value,
+                country: countryFullName.current.value,
+                sub: user.userSub,
+                language: 'english'
+            }, { withCredentials: true })
+            .then((resp)=>{
+                console.log('register_modal.js | logged user into database! | ', resp)
+            })
+            .catch((err)=>{
+                console.log('register_modal.js | error logging user into database | ', err)
+            })
+            // Router.push('/verification')
         } catch (error) {
-            console.log('error signing up', error);
+            console.log('register_modal.js | error signing up', error);
             console.log(error.code)
         }
     }
@@ -115,7 +136,7 @@ export default function RegisterModal(props) {
                     font-size: 17px;
                 }
                 .registermodal-grid-item2 {
-                    height: 307px;
+                    height: 390px;
                 }
                 .registermodal-grid-item2 > div > input:nth-of-type(1) {
                     width: 178px;
@@ -193,6 +214,13 @@ export default function RegisterModal(props) {
                                 <option value="" disabled selected>---</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="registerCountryInput">Country</label>
+                            <select id="registerCountryInput" ref={countryFullName} required>
+                                <option value="" disabled selected>---</option>
+                                <option value="singapore">Singapore</option>
                             </select>
                         </div>
                     </div>

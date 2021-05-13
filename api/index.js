@@ -11,7 +11,8 @@ const corsOptions = {
 }
 const path = require('path')
 const app = express()
-const oauthDB = require('./db/pgWrapper_oauth2')
+const GADB = require('./src/db/pgWrapper_global_accounts')
+const GUGUDB = require('./src/db/pgWrapper_gugu')
 const jwt = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem')
     // ACCESS TOKEN JWK
@@ -29,7 +30,18 @@ app.use(cookieParser())
 
 // API REQUESTS ROUTING
     // REGISTER ACCOUNT REQUEST
-
+app.options('/oauth/register', cors(corsOptions))
+app.post('/oauth/register', cors(corsOptions), (req,res)=>{
+    // LOG NEW USER DETAILS INTO DATABASE
+    console.log('/oauth/register | new user details | ', req.body)
+    GADB.none(`INSERT INTO public.accounts(username,email,first_name,surname,sub,country,gender,language,date_of_birth,last_login) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [req.body.username,req.body.userEmail,req.body.firstName,req.body.surname,req.body.sub,req.body.country,req.body.gender,req.body.language,req.body.birthdate,null])
+    .then(()=>{console.log(`/oauth/register | success | ${req.body.sub} logged into global_accounts DB`)})
+    .catch((err)=>{console.log(`/oauth/register | failure | ${req.body.sub} not logged into global_accounts DB | `, err)})
+    GUGUDB.none(`INSERT INTO public.accounts(username,email,first_name,surname,sub,country,gender,language,date_of_birth,last_login) VALUES(1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [req.body.username,req.body.userEmail,req.body.firstName,req.body.surname,req.body.sub,req.body.country,req.body.gender,req.body.language,req.body.birthdate,null])
+    .then(()=>{console.log(`/oauth/register | success | ${req.body.sub} logged into gugu DB`)})
+    .catch((err)=>{console.log(`/oauth/register | failure | ${req.body.sub} not logged into gugu DB | `, err)})
+    res.send({isRegistered: true})
+})
     // LOGIN ACCESS TOKEN REQUEST
 app.options('/oauth/signin', cors(corsOptions))
 app.post('/oauth/signin', cors(corsOptions), (req,res)=>{

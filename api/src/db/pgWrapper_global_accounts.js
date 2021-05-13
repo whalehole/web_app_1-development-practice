@@ -2,7 +2,7 @@
 const cn = {
     host: 'localhost',
     port: 5432,
-    database: 'oauth_2.0',
+    database: 'global_accounts',
     user: 'postgres',
     password: '19021991',
 }
