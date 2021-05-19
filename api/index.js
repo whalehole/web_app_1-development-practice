@@ -14,7 +14,8 @@ const app = express()
 const GADB = require('./src/db/pgWrapper_global_accounts')
 const GUGUDB = require('./src/db/pgWrapper_gugu')
 const jwt = require('jsonwebtoken')
-const jwkToPem = require('jwk-to-pem')
+const jwkToPem = require('jwk-to-pem');
+const db = require("./src/db/pgWrapper_global_accounts");
     // ACCESS TOKEN JWK
 const jwk_1 = {"alg":process.env.JWK_1_ALG,"e":process.env.JWK_1_E,"kid":process.env.JWK_1_KID,"kty":process.env.JWK_1_KTY,"n":process.env.JWK_1_N,"use":process.env.JWK_1_USE}
 const pem_1 = jwkToPem(jwk_1)
@@ -37,7 +38,7 @@ app.post('/oauth/register', cors(corsOptions), (req,res)=>{
     GADB.none(`INSERT INTO public.accounts(username,email,first_name,surname,sub,country,gender,language,date_of_birth,last_login) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [req.body.username,req.body.userEmail,req.body.firstName,req.body.surname,req.body.sub,req.body.country,req.body.gender,req.body.language,req.body.birthdate,null])
     .then(()=>{console.log(`/oauth/register | success | ${req.body.sub} logged into global_accounts DB`)})
     .catch((err)=>{console.log(`/oauth/register | failure | ${req.body.sub} not logged into global_accounts DB | `, err)})
-    GUGUDB.none(`INSERT INTO public.accounts(username,email,first_name,surname,sub,country,gender,language,date_of_birth,last_login) VALUES(1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [req.body.username,req.body.userEmail,req.body.firstName,req.body.surname,req.body.sub,req.body.country,req.body.gender,req.body.language,req.body.birthdate,null])
+    GUGUDB.none(`INSERT INTO public.accounts(username,email,first_name,surname,sub,country,gender,language,date_of_birth,last_login) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [req.body.username,req.body.userEmail,req.body.firstName,req.body.surname,req.body.sub,req.body.country,req.body.gender,req.body.language,req.body.birthdate,null])
     .then(()=>{console.log(`/oauth/register | success | ${req.body.sub} logged into gugu DB`)})
     .catch((err)=>{console.log(`/oauth/register | failure | ${req.body.sub} not logged into gugu DB | `, err)})
     res.send({isRegistered: true})
@@ -130,7 +131,17 @@ app.get('/oauth/signout', cors(corsOptions), (req,res)=>{
 
     // RESOURCE REQUESTS
 
-    // GOOGLE AUTH REQUEST
+        // GET COUNTRIES LIST
+app.get('/resrc/countries', cors(corsOptions), async (req,res)=>{
+    try {
+        const countries = await GUGUDB.any(`SELECT name FROM public.countries ORDER BY name`);
+        console.log(`/resrc/countries | success | `, countries)
+        res.send({isSuccess: true, countries: countries})
+    }
+    catch(e) {
+        console.log(`/resrc/countries | failed | `, e)
+    }
+})
 
 
 

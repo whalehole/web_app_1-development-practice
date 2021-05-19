@@ -1,5 +1,4 @@
 // COMPONENTS
-import CreateAccountButton from '../components/buttons/create_account_button'
 import SignOutButton from '../components/buttons/signout_button'
 
 export default function UserControlPanel() {

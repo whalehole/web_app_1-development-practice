@@ -5,9 +5,8 @@ import { useState, useEffect } from 'react'
 import { useQuery } from 'react-query';
 // COMPONENTS
 import Header from '../components/header'
-import Div from '../components/div'
 // SCRIPTS
-import { signedIn } from '../src/signin_status';
+import { signedIn } from '../src/GET-local_signin_status';
 
 // HOME PAGE
 export default function Home() {
@@ -23,7 +22,7 @@ export default function Home() {
   if (isLoading) {return null}
   return (
     <>
-      {console.log("page | index.js | signed in =>", data.data.isAuthenticated)}
+      {console.log("page | index.js | signed in =>", data.isAuthenticated)}
       <Head>
         <title>Gu Gu</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -94,7 +93,7 @@ export default function Home() {
         `}</style>
         
         {/* HEADER */}
-        <Header signedIn={data.data.isAuthenticated}/>
+        <Header signedIn={data.isAuthenticated}/>
 
         {/* CONTENT */}
         <div className="content-container">

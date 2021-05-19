@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { useRef, useState, useEffect } from 'react';
 // COMPONENTS
-import CreateAccountButton from '../components/buttons/create_account_button'
-import SignInButton from '../components/buttons/signin_button'
 import RegisterModal from './register_modal';
 import SigninModal from './signin_modal';
 

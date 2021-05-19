@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 // REACT
 import { useRef, useState, useEffect } from 'react';
 // SCRIPTS
-import { signedIn } from '../src/signin_status';
+import { signedIn } from '../src/GET-local_signin_status';
 // COMPONENTS
 
 export default function SigninModal(props) {

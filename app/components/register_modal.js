@@ -12,7 +12,9 @@ import Router from 'next/router';
 // REACT
 import { useRef, useState, useEffect } from 'react';
 // SCRIPTS
-import { signedIn } from '../src/signin_status';
+import { signedIn } from '../src/GET-local_signin_status';
+// COMPONENTS 
+import CountriesList from './countries_list';
 
 export default function RegisterModal(props) {
     // STATES
@@ -220,7 +222,7 @@ export default function RegisterModal(props) {
                             <label htmlFor="registerCountryInput">Country</label>
                             <select id="registerCountryInput" ref={countryFullName} required>
                                 <option value="" disabled selected>---</option>
-                                <option value="singapore">Singapore</option>
+                                <CountriesList />
                             </select>
                         </div>
                     </div>

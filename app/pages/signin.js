@@ -62,11 +62,11 @@ export default function SignInPage() {
     }, [])
 
     if (isLoading) {return null}
-    else if (data.data.isAuthenticated) {router.replace('/')}
+    else if (data.isAuthenticated) {router.replace('/')}
     if (isError) {return null}
     return (
         <>
-            {console.log("page | signin.js | signed in =>", data.data.isAuthenticated)}
+            {console.log("page | signin.js | signed in =>", data.isAuthenticated)}
             <RegisterModal setMode={handleShowModal} mode={modal} />
             <div className="signinpage-grid-container">
                 <style jsx>{`
