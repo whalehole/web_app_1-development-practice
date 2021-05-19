@@ -8,68 +8,72 @@ Amplify.configure(awsconfig);
 // NEXT
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 // REACT
 import { useRef, useState, useEffect } from 'react';
 // SCRIPTS
-import { signedIn } from '../src/signin_status';
 // COMPONENTS
 import RegisterModal from '../components/register_modal';
 
-// SIGN IN MODAL
-export default function SignInPage() {
-    const router = useRouter()
-    // PROMISES
+// SIGN IN PAGE
+export default function RegisterPage() {
+    // SIGN IN FETCH
     const { isLoading, isError, data, error } = useQuery('data', signedIn, { refetchOnWindowFocus: false })
     // STATES
     const [modal, setModal] = useState('noShow')
-    
+
     // INPUT VALUES
     const email = useRef()
     const password = useRef()
+    const firstName = useRef()
+    const surname = useRef()
+    const username = useRef()
+    const birthdate = useRef()
+    const gender = useRef()
 
     // FUNCTIONS
-    async function signIn() {
+    async function register() {
         try {
-            const user = await Auth.signIn(email.current.value, password.current.value)
-            console.log("aws promise | signin.js | sign-in success response =>", user)
-            axios.post(`http://localhost:8000/oauth/signin`, {
-                accessToken: user.signInUserSession.accessToken.jwtToken,
-                refreshToken: user.signInUserSession.refreshToken.token,
-                idToken: user.signInUserSession.idToken.jwtToken
-            }, { withCredentials: true })
-            .then((resp)=>{
-                console.log("axios promise | signin.js | tokens validation success response =>", resp)
-                router.replace('/')
-            })
+            const user = await Auth.signUp({
+                username: email.current.value, 
+                password: password.current.value, 
+                attributes: {
+                    'custom:username': username.current.value,
+                    'custom:birthdate': birthdate.current.value,
+                    'custom:first_name': firstName.current.value,
+                    'custom:surname': surname.current.value,
+                    'custom:gender': gender.current.value
+                } 
+            });
+            console.log(user)
+            Router.replace('/verification')
         } catch (error) {
-            console.log("promise | signin.js | sign-in failure response =>", error)
+            console.log('error signing up', error);
+            console.log(error.code)
         }
     }
-
     // HANDLERS
-    const handleSignIn = event => {
+    const handleRegister = event => {
         // VALIDATION
-        signIn()
+        register()
     }
     const handleShowModal = mode => {
         setModal(mode)
     }
-
     // EFFECTS ON CHANGE
     useEffect(()=>{
 
     }, [])
 
     if (isLoading) {return null}
-    else if (data.isAuthenticated) {router.replace('/')}
-    if (isError) {return null}
     return (
         <>
-            {console.log("page | signin.js | signed in =>", data.isAuthenticated)}
-            <RegisterModal setMode={handleShowModal} mode={modal} />
             <div className="signinpage-grid-container">
                 <style jsx>{`
+                input[type=text]:focus {
+                    outline-style: none;
+                    box-shadow: 0 0 0 2pt gray;
+                }
                 // MOBILE
                 // DESKTOP
                 .signinpage-grid-container {
@@ -99,6 +103,7 @@ export default function SignInPage() {
                     justify-content: center;
                     align-items: center;
                     margin: 10px auto 10px auto;
+                    padding: 1px 15px 1px 15px;
                 }
                 .signinpage-grid-item2 > div > button {
                     margin: auto;
@@ -125,10 +130,6 @@ export default function SignInPage() {
                 hr {
                     width: 150px;
                 }
-                .alt-links {
-                    font-size: 11px;
-                    text-decoration: underline;
-                }
                 `}</style>
                 {/* LOGO */}
                 <div className="signinpage-grid-item1">
@@ -143,9 +144,14 @@ export default function SignInPage() {
                 {/* USER LOGIN & REGISTER */}
                 <div className="signinpage-grid-item2">
                     <div>
-                        <input ref={email} type="text" />
-                        <input ref={password} type="password" />
-                        <button onClick={handleSignIn}>Sign in</button>
+                        <input ref={firstName} type="text" placeholder="First name"/>
+                        <input ref={surname} type="text" placeholder="Surname"/>
+                        <input ref={email} type="text" placeholder="Email address"/>
+                        <input ref={password} type="password" placeholder="Password"/>
+                        <input ref={username} type="text" placeholder="Username"/>
+                        <input ref={birthdate} type="text" />
+                        <input ref={gender} type="text" />
+                        <button onClick={handleRegister}>Sign up</button>
                     </div>
                 </div>
                 <div className="signinpage-grid-item3"><p>Sign in with</p></div>
@@ -195,14 +201,10 @@ export default function SignInPage() {
                 {/* WARNING */}
                 <div className="signinpage-grid-item5">
                     <hr></hr>
-                    <Link href="/forgetpw">
-                        <a className="alt-links">Forgotten password</a>
-                    </Link>
-                    <br></br>
-                    <Link href="">
-                        <a className="alt-links" onClick={()=>{handleShowModal('show')}}>Create account</a>
-                    </Link>
+                    <p></p>
                 </div>
+                <RegisterModal setMode={handleShowModal} mode={modal} />
+                <button type="button" onClick={()=>{handleShowModal('show')}}>show modal</button>
             </div>
         </>
     )
