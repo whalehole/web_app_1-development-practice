@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { useQuery } from 'react-query';
 // AWS IdP
-import Amplify, { Auth } from 'aws-amplify';
+import Amplify, { Auth, Hub} from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 Amplify.configure(awsconfig);
 // NEXT
@@ -19,7 +19,7 @@ export default function SigninModal(props) {
     const router = useRouter()
 
     // STATES
-
+    const [user, setUser] = useState(null);
 
     // INPUT VALUES
     const email = useRef()
@@ -55,12 +55,90 @@ export default function SigninModal(props) {
             props.setMode('')
         }
     }
-    // EFFECTS ON CHANGE
+    // EFFECTS ONCE
     useEffect(()=>{
+        // TOGGLE VIEW OF MODAL 
+        if (!window.FB) createScript();
         document.addEventListener('mousedown', handleClickOutside)
     }, [])
 
+    //////////////////////////////////////////////////////
+    const federatedSignIn = () => {
+        const fb = window.FB;
+        fb.getLoginStatus(response => {
+            if (response.status === 'connected') {
+                getAWSCredentials(response.authResponse);
+            } else {
+                fb.login(
+                    response => {
+                        if (!response || !response.authResponse) {
+                            return;
+                        }
+                        getAWSCredentials(response.authResponse);
+                    },
+                    {
+                        // the authorized scopes
+                        scope: 'public_profile,email'
+                    }
+                );
+            }
+        });
+    }
+
+    const getAWSCredentials = (response) => {
+            const { accessToken, expiresIn } = response;
+            const date = new Date();
+            const expires_at = expiresIn * 1000 + date.getTime();
+            if (!accessToken) {
+                return;
+            }
+
+            const fb = window.FB;
+            fb.api('/me', { fields: 'name,email' }, response => {
+                const user = {
+                    name: response.name,
+                    email: response.email
+                };
+
+                Auth.federatedSignIn('facebook', { token: accessToken, expires_at }, user)
+                .then(credentials => {
+                    console.log(credentials);
+                });
+            });
+        }
+
+    const createScript = () => {
+        // load the sdk
+        window.fbAsyncInit = fbAsyncInit;
+        const script = document.createElement('script');
+        script.src = 'https://connect.facebook.net/en_US/sdk.js';
+        script.async = true;
+        script.onload = initFB;
+        document.body.appendChild(script);
+    }
+
+    const initFB = () => {
+        const fb = window.FB;
+        console.log('FB SDK initialized');
+    }
+
+    const fbAsyncInit = () => {
+        // init the fb sdk client
+        const fb = window.FB;
+        fb.init({
+            appId   : '145983097440101',
+            cookie  : true,
+            xfbml   : true,
+            version : 'v2.11'
+        });
+    }
+    //////////////////////////////////////////////////////
+
     if (props.mode !== 'show') {return null}
+    Auth.currentAuthenticatedUser()
+    .then((user) => console.log(user))
+    .catch(() => console.log("Not signed in"));
+    Auth.signOut()
     return (
         <>
             <div ref={modal} className="sigininmodal-grid-container">
@@ -159,7 +237,7 @@ export default function SigninModal(props) {
                     </div>
                     <div className="signinmodal-grid-item4-2">
                         <div className="signinmodal-grid-item4-2-1">
-                            <a type="button" onClick={() => Auth.federatedSignIn({provider: 'Facebook'})}>
+                            <a type="button" onClick={federatedSignIn}>
                                 <Image 
                                     src="/../public/images/facebook-logo.svg"
                                     height={35}
@@ -179,14 +257,14 @@ export default function SigninModal(props) {
                                 </a></Link>
                         </div>
                         <div className="signinmodal-grid-item4-2-1">
-                            <Link href=""><a>
+                            <a type="button" onClick={() => Auth.federatedSignIn({provider: 'Google'})}>
                                 <Image 
                                     src="/../public/images/google-logo.svg"
                                     height={35}
                                     width={35}
                                     alt="google-logo.svg"
                                 />
-                                </a></Link>
+                            </a>
                         </div>
                         <div className="signinmodal-grid-item4-2-1">
                             <Link href="/"><a>

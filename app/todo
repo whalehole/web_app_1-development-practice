@@ -1,0 +1,1 @@
+1) federated login issues 'invalid_request' when exchanging auth code with tokens. problem could be due to unsafe domain http (localhost). or could be due to unverified email
