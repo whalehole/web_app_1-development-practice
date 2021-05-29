@@ -157,10 +157,6 @@ Parameters:
     Type: String
   
             
-  hostedUIProviderCreds:
-    Type: String
-  
-            
   
   userPoolGroups:
     Type: String
@@ -169,10 +165,14 @@ Parameters:
   adminQueries:
     Type: String
             
-            
   
   thirdPartyAuth:
     Type: String
+            
+  hostedUIProviderCreds:
+    Type: String
+  
+            
             
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
