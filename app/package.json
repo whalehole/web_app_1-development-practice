@@ -28,6 +28,10 @@
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.1.21",
     "@storybook/react": "^6.2.9",
-    "babel-loader": "^8.2.2"
+    "babel-loader": "^8.2.2",
+    "postcss": "^8.3.0"
+  },
+  "peerDependencies": {
+    "postcss": "^8.3.0"
   }
 }
