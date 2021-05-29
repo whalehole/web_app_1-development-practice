@@ -21,7 +21,7 @@ export default function SignOutButton() {
     // HANDLERS
     const handleSignOut = event => {
         // SIGNOUT
-        axios.get(`http://localhost:8000/oauth/signout`, { withCredentials: true })
+        axios.get(`https://gugu.to/oauth/signout`, { withCredentials: true })
         .then((res)=>{
             console.log("axios promise | signout_button.js | sign-out success response =>", res)
             Router.reload()
