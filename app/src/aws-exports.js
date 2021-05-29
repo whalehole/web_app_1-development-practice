@@ -16,8 +16,8 @@ const awsmobile = {
             "profile",
             "aws.cognito.signin.user.admin"
         ],
-        "redirectSignIn": "http://localhost:3000/callback/",
-        "redirectSignOut": "http://localhost:3000/callback/",
+        "redirectSignIn": "https://gugu.vercel.app/callback",
+        "redirectSignOut": "https://gugu.vercel.app/callback",
         "responseType": "code"
     },
     "federationTarget": "COGNITO_USER_POOLS"
