@@ -239,7 +239,7 @@ export default function SigninModal(props) {
                         <div className="signinmodal-grid-item4-2-1">
                             <a type="button" onClick={federatedSignIn}>
                                 <Image 
-                                    src="/../public/images/facebook-logo.svg"
+                                    src="/images/facebook-logo.svg"
                                     height={35}
                                     width={35}
                                     alt="facebook-logo.svg"
@@ -249,7 +249,7 @@ export default function SigninModal(props) {
                         <div className="signinmodal-grid-item4-2-1">
                             <Link href=""><a>
                                 <Image 
-                                    src="/../public/images/twitter-logo.svg"
+                                    src="/images/twitter-logo.svg"
                                     height={35}
                                     width={35}
                                     alt="twitter-logo.svg"
@@ -259,7 +259,7 @@ export default function SigninModal(props) {
                         <div className="signinmodal-grid-item4-2-1">
                             <a type="button" onClick={() => Auth.federatedSignIn({provider: 'Google'})}>
                                 <Image 
-                                    src="/../public/images/google-logo.svg"
+                                    src="/images/google-logo.svg"
                                     height={35}
                                     width={35}
                                     alt="google-logo.svg"
@@ -269,7 +269,7 @@ export default function SigninModal(props) {
                         <div className="signinmodal-grid-item4-2-1">
                             <Link href="/"><a>
                                 <Image 
-                                    src="/../public/images/apple-logo.svg"
+                                    src="/images/apple-logo.svg"
                                     height={35}
                                     width={35}
                                     alt="apple-logo.svg"

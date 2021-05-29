@@ -40,7 +40,7 @@ export default function Header(props) {
                 {/* LOGO */}
                 <div className="header-grid-item1">
                     <Image 
-                        src="/../public/images/logo.svg"
+                        src="/images/logo.svg"
                         height={40}
                         width={220}
                         alt="logo.svg"
