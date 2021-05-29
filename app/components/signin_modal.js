@@ -31,7 +31,7 @@ export default function SigninModal(props) {
         try {
             const user = await Auth.signIn(email.current.value, password.current.value)
             console.log("aws promise | signin.js | sign-in success response =>", user)
-            axios.post(`https://5b1a1842abe9.ngrok.io/oauth/signin`, {
+            axios.post(`https://gugu.to/oauth/signin`, {
                 accessToken: user.signInUserSession.accessToken.jwtToken,
                 refreshToken: user.signInUserSession.refreshToken.token,
                 idToken: user.signInUserSession.idToken.jwtToken
