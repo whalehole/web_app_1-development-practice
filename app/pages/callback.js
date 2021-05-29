@@ -15,7 +15,7 @@ export default function CallbackPage() {
                 grant_type: "authorization_code",
                 code: code,
                 client_id: "6ddeh1teq2kvff2abrn4qdrvr5",
-                redirect_uri: "http://localhost:3000/callback/"
+                redirect_uri: "https://gugu.vercel.app/callback"
             }), {
                 headers: {
                     "content-type": 'application/x-www-form-urlencoded'
