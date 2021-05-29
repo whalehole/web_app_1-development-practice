@@ -22,7 +22,7 @@ export default function Home() {
   if (isLoading) {return null}
   return (
     <>
-      {console.log("page | index.js | signed in =>", data.isAuthenticated)}
+      {console.log("page | index.js | signed in =>", data.isAuthenticated, data.error && data.error)}
       <Head>
         <title>Gu Gu</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
