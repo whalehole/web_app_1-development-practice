@@ -48,7 +48,7 @@ export default function RegisterModal(props) {
                 } 
             });
             console.log('register_modal.js | registered user into IDP | response | ', user)
-            axios.post(`https://gugu.to/oauth/register`, {
+            axios.post(`https://5b1a1842abe9.ngrok.io/oauth/register`, {
                 userEmail: email.current.value,
                 birthdate: birthdate.current.value,
                 firstName: firstName.current.value,
