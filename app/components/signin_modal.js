@@ -102,10 +102,6 @@ export default function SigninModal(props) {
 
                 Auth.federatedSignIn('facebook', { token: accessToken, expires_at }, user)
                 .then(credentials => {
-                    const federatedInfo = Cache.getItem('federatedInfo')
-                    const { token } = federatedInfo
-                    console.log(token);
-                    console.log(federatedInfo)
                     console.log(credentials)
                 });
             });
