@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { useQuery } from 'react-query';
 // AWS IdP
-import Amplify, { Auth, Hub} from 'aws-amplify';
+import Amplify, { Auth, Cache } from 'aws-amplify';
 import awsconfig from '../src/aws-exports';
 Amplify.configure(awsconfig);
 // NEXT
@@ -102,7 +102,11 @@ export default function SigninModal(props) {
 
                 Auth.federatedSignIn('facebook', { token: accessToken, expires_at }, user)
                 .then(credentials => {
-                    console.log(credentials);
+                    const federatedInfo = Cache.getItem('federatedInfo')
+                    const { token } = federatedInfo
+                    console.log(token);
+                    console.log(federatedInfo)
+                    console.log(credentials)
                 });
             });
         }
