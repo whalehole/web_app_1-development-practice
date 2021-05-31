@@ -6,14 +6,15 @@ import qs from 'qs'
 // CALLBACK FOR AUTHORIZATION CODE FROM AWS AFTER SOCIAL SIGN IN (FACEBOOK)
 export default function CallbackPage() {
     const router = useRouter()
-    const { code } = router.query
+    const { code, state } = router.query
 
     useEffect(()=>{
         if (code) {
-            console.log(code)
+            console.log(code, '|', state)
             axios.post(`https://guguto-dev.auth.us-east-2.amazoncognito.com/oauth2/token`, qs.stringify({
                 grant_type: "authorization_code",
                 code: code,
+                state: state,
                 client_id: "6ddeh1teq2kvff2abrn4qdrvr5",
                 redirect_uri: "https://gugu.vercel.app/callback"
             }), {
