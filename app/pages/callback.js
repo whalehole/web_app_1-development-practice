@@ -14,8 +14,8 @@ export default function CallbackPage() {
             axios.post(`https://gugu-prod.auth.us-east-2.amazoncognito.com/oauth2/token`, qs.stringify({
                 grant_type: "authorization_code",
                 code: code,
-                client_id: "6ddeh1teq2kvff2abrn4qdrvr5",
-                redirect_uri: "https://gugu.vercel.app/callback"
+                client_id: "5df7phhc10uaijujhri1r5e5kb",
+                redirect_uri: "https://gugu.vercel.app/callback/"
             }), {
                 headers: {
                     "content-type": 'application/x-www-form-urlencoded'
