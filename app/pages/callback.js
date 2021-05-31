@@ -11,7 +11,7 @@ export default function CallbackPage() {
     useEffect(()=>{
         if (code) {
             console.log(code, '|', state)
-            axios.post(`https://guguto-dev.auth.us-east-2.amazoncognito.com/oauth2/token`, qs.stringify({
+            axios.post(`https://gugu-prod.auth.us-east-2.amazoncognito.com/oauth2/token`, qs.stringify({
                 grant_type: "authorization_code",
                 code: code,
                 client_id: "6ddeh1teq2kvff2abrn4qdrvr5",
