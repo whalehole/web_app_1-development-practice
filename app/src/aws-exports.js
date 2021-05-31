@@ -3,12 +3,12 @@
 
 const awsmobile = {
     "aws_project_region": "us-east-2",
-    "aws_cognito_identity_pool_id": "us-east-2:1741cadd-d1c6-4ae9-b9ab-f52ddfe8c145",
+    "aws_cognito_identity_pool_id": "us-east-2:fc0666c8-5989-40ac-8d80-cd169f5cf46d",
     "aws_cognito_region": "us-east-2",
-    "aws_user_pools_id": "us-east-2_LpGEXZHrW",
-    "aws_user_pools_web_client_id": "6ddeh1teq2kvff2abrn4qdrvr5",
+    "aws_user_pools_id": "us-east-2_l589PseB6",
+    "aws_user_pools_web_client_id": "5df7phhc10uaijujhri1r5e5kb",
     "oauth": {
-        "domain": "guguto-dev.auth.us-east-2.amazoncognito.com",
+        "domain": "gugu-prod.auth.us-east-2.amazoncognito.com",
         "scope": [
             "phone",
             "email",
@@ -16,8 +16,8 @@ const awsmobile = {
             "profile",
             "aws.cognito.signin.user.admin"
         ],
-        "redirectSignIn": "https://gugu.vercel.app/callback",
-        "redirectSignOut": "https://gugu.vercel.app/callback",
+        "redirectSignIn": "https://gugu.vercel.app/callback/",
+        "redirectSignOut": "https://gugu.vercel.app/callback/",
         "responseType": "code"
     },
     "federationTarget": "COGNITO_USER_POOLS"

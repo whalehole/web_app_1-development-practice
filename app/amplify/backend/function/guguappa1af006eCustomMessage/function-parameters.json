@@ -1,0 +1,21 @@
+{
+  "trigger": true,
+  "modules": [
+    "verification-link"
+  ],
+  "parentResource": "guguappa1af006e",
+  "functionName": "guguappa1af006eCustomMessage",
+  "resourceName": "guguappa1af006eCustomMessage",
+  "parentStack": "auth",
+  "triggerEnvs": "[\n  {\n    \"key\": \"RESOURCENAME\",\n    \"value\": \"resourceName\"\n  }\n]",
+  "triggerDir": "E:\\nodejs\\node_modules\\npm\\node_modules\\@aws-amplify\\cli\\node_modules\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\CustomMessage",
+  "triggerTemplate": "CustomMessage.json.ejs",
+  "triggerEventPath": "CustomMessage.event.json",
+  "roleName": "guguappa1af006eCustomMessage",
+  "skipEdit": true,
+  "REDIRECTURL": "https://gugu.dev.app",
+  "EMAILSUBJECT": "Your account is confirmed!",
+  "EMAILMESSAGE": "To confirm click the link",
+  "RESOURCENAME": "resourceName",
+  "enableCors": false
+}

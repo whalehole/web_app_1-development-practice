@@ -27,7 +27,7 @@ export default function RegisterModal(props) {
     const username = useRef()
     const birthdate = useRef()
     const gender = useRef()
-    const countryFullName = useRef()
+    const country = useRef()
 
     // NODES
     const modal = useRef()
@@ -44,7 +44,7 @@ export default function RegisterModal(props) {
                     'custom:first_name': firstName.current.value,
                     'custom:surname': surname.current.value,
                     'custom:gender': gender.current.value,
-                    'custom:countryfullname': countryFullName.current.value
+                    'custom:country': country.current.value
                 } 
             });
             console.log('register_modal.js | registered user into IDP | response | ', user)
@@ -55,7 +55,7 @@ export default function RegisterModal(props) {
                 surname: surname.current.value,
                 username: username.current.value,
                 gender: gender.current.value,
-                country: countryFullName.current.value,
+                country: country.current.value,
                 sub: user.userSub,
                 language: 'english'
             }, { withCredentials: true })
@@ -220,7 +220,7 @@ export default function RegisterModal(props) {
                         </div>
                         <div>
                             <label htmlFor="registerCountryInput">Country</label>
-                            <select id="registerCountryInput" ref={countryFullName} required>
+                            <select id="registerCountryInput" ref={country} required>
                                 <option value="" disabled selected>---</option>
                                 <CountriesList />
                             </select>
