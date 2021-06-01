@@ -5,7 +5,7 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const corsOptions = {
-    origin: process.env.DOMAIN,
+    origin: "http://localhost:3000",
     credentials: true,
     allowHeaders: ['Content-Type', 'Authorization']
 }
@@ -15,7 +15,6 @@ const GADB = require('./src/db/pgWrapper_global_accounts')
 const GUGUDB = require('./src/db/pgWrapper_gugu')
 const jwt = require('jsonwebtoken')
 const jwkToPem = require('jwk-to-pem');
-const db = require("./src/db/pgWrapper_global_accounts");
     // ACCESS TOKEN JWK
 const jwk_1 = {"alg":process.env.JWK_1_ALG,"e":process.env.JWK_1_E,"kid":process.env.JWK_1_KID,"kty":process.env.JWK_1_KTY,"n":process.env.JWK_1_N,"use":process.env.JWK_1_USE}
 const pem_1 = jwkToPem(jwk_1)
@@ -53,8 +52,8 @@ app.post('/oauth/signin', cors(corsOptions), (req,res)=>{
             jwt.verify(req.body.idToken, pem_2, { algorithms: ['RS256'], issuer: process.env.JWT_ISS, audience: process.env.JWT_APP_CLIENT_ID, maxAge: 24*60*60 }, (err, decodedToken)=>{
                 if (decodedToken && decodedToken.token_use === 'id') {
                     // SEND COOKIES CONTAINING TOKENS AFTER VERIFICATIONS & SIGNIN STATUS
-                    res.cookie('guguAccessToken', req.body.accessToken, { httpOnly: true, secure: false, maxAge: 24*60*60000 })
-                    res.cookie('guguRefreshToken', req.body.refreshToken, { httpOnly: true, secure: false, maxAge: 365*24*60*60000 })
+                    res.cookie('guguAccessToken', req.body.accessToken, { httpOnly: true, secure: true, maxAge: 24*60*60000, sameSite: 'none' })
+                    res.cookie('guguRefreshToken', req.body.refreshToken, { httpOnly: true, secure: true, maxAge: 365*24*60*60000, sameSite: 'none' })
                     console.log(`valid id token @ ${decodedToken.auth_time}`)
                     console.log(decodedToken)
                     res.send({isSignedIn: true, accessToken: req.body.accessToken, refreshToken: req.body.refreshToken})
@@ -84,8 +83,8 @@ app.get('/oauth/auth', cors(corsOptions), (req,res)=>{
                 res.send({isAuthenticated: true})
             } 
             if (err) {
-                console.log(`/oauth/auth | failed token validation`)
-                res.send({isAuthenticated: false})
+                console.log(`/oauth/auth | failed token validation | `, err)
+                res.send({isAuthenticated: false, error: err})
             }
         })
     }
@@ -104,27 +103,27 @@ app.get('/oauth/auth', cors(corsOptions), (req,res)=>{
         })
         .then((resp)=>{
             console.log(`/oauth/auth | success refresh token |`, resp.data)
-            res.cookie('guguAccessToken', resp.data.access_token, { httpOnly: true, secure: false, maxAge: 24*60*60000 })
+            res.cookie('guguAccessToken', resp.data.access_token, { httpOnly: true, secure: true, maxAge: 24*60*60000, sameSite: 'none' })
             // EXTRACT USER DETAILS FROM DATABASE
             // SEND AUTHENTICATION STATUS & USER DETAILS
             res.send({isAuthenticated: true})
         })
         .catch((err)=>{
             console.log(`/oauth/auth | failed refresh token |`, err)
-            res.send({isAuthenticated: false})
+            res.send({isAuthenticated: false, error: err})
         })
     }
     else {
         console.log(`/oauth/auth | no access token`)
-        res.send({isAuthenticated: false})
+        res.send({isAuthenticated: false, error: "no access token"})
     }
 })
 
     // SIGN OUT REQUESTS
 app.get('/oauth/signout', cors(corsOptions), (req,res)=>{
     console.log('/oauth/signout | signing out')
-    res.clearCookie('guguAccessToken')
-    res.clearCookie('guguRefreshToken')
+    res.clearCookie('guguAccessToken', { httpOnly: true, secure: true, sameSite: 'none' })
+    res.clearCookie('guguRefreshToken', { httpOnly: true, secure: true, sameSite: 'none' })
     res.send({isSignedOut: true})
 })
 
@@ -152,8 +151,8 @@ app.get('/resrc/countries', cors(corsOptions), async (req,res)=>{
 
 
 // PORT LOCATION
-app.listen(8000, () => {
-    console.log("Listening on port 8000. Go to http://localhost:8000");
+app.listen(443, () => {
+    console.log("Listening on port 443. Go to http://localhost:443");
 })
 // ---------
 
